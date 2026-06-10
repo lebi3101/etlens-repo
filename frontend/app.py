@@ -12,7 +12,7 @@ from parser.sql_parser import parse_sql_etl
 from ai.doc_generator import generate_documentation
 from ai.business_explainer import explain_business_purpose
 from diagram.flow_diagram import generate_flow_diagram
-from impact.impact_analysis import analyze_impact
+from impact.impact_analysis import analyze_all_scripts, get_impact_analysis, build_dependency_graph
 from ai.rag_pipeline import query_rag
 from export.pdf_exporter import export_to_pdf
 
