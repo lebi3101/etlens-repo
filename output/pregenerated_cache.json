@@ -1,0 +1,134 @@
+{
+  "parsed": [
+    {
+      "file": "sample_orders.py",
+      "type": "python",
+      "sources": [
+        "data/orders.csv"
+      ],
+      "targets": [
+        "big_orders"
+      ],
+      "transformations": [
+        "filter/condition",
+        "new column: processed",
+        "rename"
+      ]
+    },
+    {
+      "file": "sample_hr.py",
+      "type": "python",
+      "sources": [
+        "data/employees.csv",
+        "data/attendance.csv"
+      ],
+      "targets": [
+        "hr_report"
+      ],
+      "transformations": [
+        "new column: bonus",
+        "filter/condition",
+        "merge"
+      ]
+    },
+    {
+      "file": "sample_sales.sql",
+      "type": "sql",
+      "sources": [
+        "customers",
+        "orders"
+      ],
+      "targets": [
+        "sales_summary"
+      ],
+      "transformations": [
+        "where",
+        "sum",
+        "join",
+        "count"
+      ]
+    }
+  ],
+  "docs": {
+    "sample_orders.py": "**sample_orders.py ETL Script Documentation**\n\n### **Overview**\nThis ETL script extracts orders data from a CSV file, transforms it, and loads the transformed data into a target database table named 'big_orders'.\n\n### **What It Does**\n* Extracts orders data from the 'data/orders.csv' file and applies filtering based on a specified condition.\n* Transforms the filtered data by adding a new column 'processed' and renaming existing columns as required.\n\n### **Output**\nThe transformed data is loaded into the 'big_orders' table in the target database, ready for further analysis or processing.",
+    "sample_hr.py": "**Overview**\nThe sample_hr.py script is an ETL (Extract, Transform, Load) pipeline that extracts employee data from two CSV files, transforms the data by calculating a bonus column and filtering attendance records, and loads the transformed data into a target database table named hr_report.\n\n**What It Does**\n\n* Extracts employee data from two CSV files: employees.csv and attendance.csv, which are located in the data directory.\n* Transforms the extracted data by calculating a bonus column based on attendance records and filters out attendance records that meet a specific condition.\n\n**Output**\nThe transformed data is loaded into the hr_report table in the target database, which can be used for reporting and analysis purposes.",
+    "sample_sales.sql": "**sample_sales.sql**\n=====================\n\n### Overview\nThis ETL script aggregates sales data from the `orders` table by customer and summarizes the total sales.\n\n### What It Does\n* Joins the `customers` and `orders` tables based on the customer ID to link sales data with customer information.\n* Calculates the total sales for each customer by summing the order values.\n\n### Output\nThe script generates a `sales_summary` table containing the customer ID, customer name, and total sales amount."
+  },
+  "business": {
+    "sample_orders.py": "Here are the answers:\n\n1. **Business Purpose:** The 'sample_orders.py' ETL script is designed to extract order data from the 'data/orders.csv' file and transform it to be loaded into the 'big_orders' database, enabling business stakeholders to analyze and make informed decisions based on comprehensive order data.\n\n2. **Who Benefits:** This ETL script primarily benefits the sales and marketing teams, who will use the 'big_orders' database to analyze customer behavior, identify trends, and optimize their strategies to increase revenue and customer satisfaction.\n\n3. **Risk if Fails:** If the 'sample_orders.py' ETL script fails, it may result in delayed or inaccurate order data being loaded into the 'big_orders' database, potentially leading to incorrect business insights, missed sales opportunities, and a loss of competitive advantage.",
+    "sample_hr.py": "Here are the answers:\n\n1. **Business Purpose:** The ETL script 'sample_hr.py' is designed to extract relevant data from two sources (employees and attendance records) and load it into a single report (hr_report), providing a comprehensive view of employee attendance and performance. This report will help HR managers make informed decisions about employee productivity, scheduling, and resource allocation.\n\n2. **Who Benefits:** The HR team, department managers, and senior leadership will benefit from this report, as it will provide them with insights into employee attendance patterns, productivity metrics, and other key performance indicators. This information will enable them to identify areas for improvement, optimize resource allocation, and make data-driven decisions to drive business growth.\n\n3. **Risk if Fails:** If the ETL script fails, it may result in incomplete or inaccurate data being loaded into the hr_report, leading to incorrect insights and potentially costly decisions being made by HR managers and senior leadership. This could also lead to a loss of trust in the data and the reporting process, which could have long-term consequences for the organization's ability to make data-driven decisions.",
+    "sample_sales.sql": "Here are the answers:\n\n**1. Business Purpose:**\nThe 'sample_sales.sql' ETL script is designed to extract customer and order data from existing systems and transform it into a summarized sales report, providing insights into sales performance and customer behavior. This report will help business leaders make informed decisions about marketing strategies, product offerings, and customer engagement.\n\n**2. Who Benefits:**\nThe sales summary report generated by the 'sample_sales.sql' ETL script will benefit various stakeholders, including sales managers, marketing teams, and business analysts, who will use the insights to optimize sales strategies, improve customer satisfaction, and drive revenue growth. Additionally, senior executives will also benefit from the report, as it will provide a high-level view of sales performance and help them make strategic decisions.\n\n**3. Risk if Fails:**\nIf the 'sample_sales.sql' ETL script fails, the business will be at risk of making decisions based on incomplete or inaccurate sales data, which can lead to misallocated resources, ineffective marketing campaigns, and lost revenue opportunities. Furthermore, a failed ETL script can also impact the trust and confidence of stakeholders in the data, making it challenging to make informed business decisions and potentially leading to reputational damage."
+  },
+  "diagrams": {
+    "sample_orders.py": "output\\diagrams\\sample_orders_py.png",
+    "sample_hr.py": "output\\diagrams\\sample_hr_py.png",
+    "sample_sales.sql": "output\\diagrams\\sample_sales_sql.png"
+  },
+  "impact": {
+    "graph_nodes": 11,
+    "graph_edges": 8,
+    "impact_reports": {
+      "sample_orders.py": {
+        "script": "sample_orders.py",
+        "risk_level": "MEDIUM",
+        "risk_reason": "Failure affects 1 output(s) but no other scripts directly.",
+        "upstream_dependencies": [
+          "data/orders.csv"
+        ],
+        "all_upstream": [
+          "data/orders.csv"
+        ],
+        "direct_outputs": [
+          "big_orders"
+        ],
+        "all_downstream": [
+          "big_orders"
+        ],
+        "affected_scripts": [],
+        "total_nodes_affected": 1
+      },
+      "sample_hr.py": {
+        "script": "sample_hr.py",
+        "risk_level": "MEDIUM",
+        "risk_reason": "Failure affects 1 output(s) but no other scripts directly.",
+        "upstream_dependencies": [
+          "data/employees.csv",
+          "data/attendance.csv"
+        ],
+        "all_upstream": [
+          "data/employees.csv",
+          "data/attendance.csv"
+        ],
+        "direct_outputs": [
+          "hr_report"
+        ],
+        "all_downstream": [
+          "hr_report"
+        ],
+        "affected_scripts": [],
+        "total_nodes_affected": 1
+      },
+      "sample_sales.sql": {
+        "script": "sample_sales.sql",
+        "risk_level": "MEDIUM",
+        "risk_reason": "Failure affects 1 output(s) but no other scripts directly.",
+        "upstream_dependencies": [
+          "customers",
+          "orders"
+        ],
+        "all_upstream": [
+          "customers",
+          "orders"
+        ],
+        "direct_outputs": [
+          "sales_summary"
+        ],
+        "all_downstream": [
+          "sales_summary"
+        ],
+        "affected_scripts": [],
+        "total_nodes_affected": 1
+      }
+    }
+  }
+}

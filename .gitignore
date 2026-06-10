@@ -1,0 +1,23 @@
+echo venv/ > .gitignore
+echo __pycache__/ >> .gitignore
+echo *.pkl >> .gitignore
+echo *.db >> .gitignore
+echo .env >> .gitignore
+echo output/uploads/ >> .gitignore
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+database/etl_docs.db
+output/diagrams/*.png
+output/docs/*.md
+output/reports/*.pdf
+.DS_Store
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.pkl
+database/etl_docs.db
