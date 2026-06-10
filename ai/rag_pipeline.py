@@ -135,4 +135,5 @@ def build_rag_index(docs: dict):
     Public function to build the vector store from generated docs.
     Call this after generating documentation.
     """
-    _pipeline.build_vector_store(docs)
+    _pipeline.build_vector_store(docs)git commit -m "Add query_rag function to rag_pipeline"
+    
