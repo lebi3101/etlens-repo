@@ -1,8 +1,7 @@
-import sys, os
+﻿import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from fpdf import FPDF
 from dotenv import load_dotenv
-import io
 
 load_dotenv()
 
@@ -41,12 +40,10 @@ class ETLReportPDF(FPDF):
 
     def add_script_section(self, filename, parsed, documentation, business_purpose, impact):
         self.add_page()
-
         self.set_font("Arial", "B", 13)
         self.set_text_color(52, 73, 94)
         self.cell(0, 10, f"Script: {filename}", ln=True)
         self.ln(2)
-
         self.section_title("Parsed Information")
         self.body_text(
             f"Type: {parsed.get('type', 'N/A').upper()}\n"
@@ -54,13 +51,10 @@ class ETLReportPDF(FPDF):
             f"Targets: {', '.join(parsed.get('targets', [])) or 'N/A'}\n"
             f"Transformations: {', '.join(parsed.get('transformations', [])) or 'N/A'}"
         )
-
         self.section_title("Auto-Generated Documentation")
         self.body_text(documentation or "Not generated.")
-
         self.section_title("Business Purpose")
         self.body_text(business_purpose or "Not generated.")
-
         self.section_title("Impact Analysis")
         self.body_text(
             f"Risk Level: {impact.get('risk_level', 'N/A')}\n"
@@ -71,52 +65,14 @@ class ETLReportPDF(FPDF):
         )
 
 
-def generate_pdf_report(
-    all_parsed: list,
-    docs: dict,
-    business: dict,
-    impact_reports: dict,
-    output_filename: str = "etl_report.pdf"
-) -> str:
-    """
-    Generates a full PDF report. Returns path to saved file.
-    """
-    pdf = ETLReportPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-
-    for parsed in all_parsed:
-        fname = parsed["file"]
-        pdf.add_script_section(
-            filename=fname,
-            parsed=parsed,
-            documentation=docs.get(fname, "Not generated."),
-            business_purpose=business.get(fname, "Not generated."),
-            impact=impact_reports.get(fname, {})
-        )
-
-    output_path = os.path.join(REPORTS_DIR, output_filename)
-    pdf.output(output_path)
-    return output_path
-
-
 def export_to_pdf(docs: dict, business: dict, impact: dict) -> bytes:
-    """
-    Called by frontend/app.py.
-    Builds a PDF from docs, business, impact dicts and returns bytes
-    for Streamlit's download_button.
-    """
     pdf = ETLReportPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
-
-    all_files = list(docs.keys())
-
-    for fname in all_files:
+    for fname in docs.keys():
         parsed_stub = {
             "file": fname,
             "type": "python" if fname.endswith(".py") else "sql",
-            "sources": [],
-            "targets": [],
-            "transformations": []
+            "sources": [], "targets": [], "transformations": []
         }
         pdf.add_script_section(
             filename=fname,
@@ -125,7 +81,20 @@ def export_to_pdf(docs: dict, business: dict, impact: dict) -> bytes:
             business_purpose=business.get(fname, "Not generated."),
             impact=impact.get(fname, {})
         )
+    return pdf.output(dest="S").encode("latin-1")
 
-    # Return as bytes for Streamlit download_button
-    pdf_bytes = pdf.output(dest="S").encode("latin-1")
-    return pdf_bytes
+
+def generate_pdf_report(all_parsed, docs, business, impact_reports, output_filename="etl_report.pdf"):
+    pdf = ETLReportPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    for parsed in all_parsed:
+        fname = parsed["file"]
+        pdf.add_script_section(
+            filename=fname, parsed=parsed,
+            documentation=docs.get(fname, "Not generated."),
+            business_purpose=business.get(fname, "Not generated."),
+            impact=impact_reports.get(fname, {})
+        )
+    output_path = os.path.join(REPORTS_DIR, output_filename)
+    pdf.output(output_path)
+    return output_path
