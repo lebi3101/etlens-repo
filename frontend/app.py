@@ -184,7 +184,8 @@ elif page == "💥 Impact Analysis":
     else:
         if st.button("🔍 Run Impact Analysis"):
             with st.spinner("Analyzing dependencies..."):
-                impact = analyze_impact(st.session_state.parsed_files)
+                results, G = analyze_all_scripts(st.session_state.parsed_files)
+                impact = results
                 st.session_state.impact = impact
                 st.success("✅ Impact analysis complete!")
         if st.session_state.impact:
