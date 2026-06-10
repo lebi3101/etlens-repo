@@ -1,3 +1,4 @@
+# frontend/app.py
 import streamlit as st
 import os
 import sys
@@ -129,6 +130,9 @@ elif page == "📄 Documentation":
                     doc = generate_documentation(p)
                     docs[p["file"]] = doc
                 st.session_state.docs = docs
+                # Build RAG index immediately after generating docs
+                from ai.rag_pipeline import build_rag_index
+                build_rag_index(docs)
                 st.success(f"✅ Generated docs for {len(docs)} files!")
         if st.session_state.docs:
             for fname, doc in st.session_state.docs.items():
