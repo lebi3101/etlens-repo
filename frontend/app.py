@@ -23,7 +23,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("⚙️ ETL Script Documentation Generator")
+st.title("ETL Script Documentation Generator")
 st.caption("Automatically generate docs, diagrams, and impact analysis for your ETL scripts.")
 
 # ── SESSION STATE ─────────────────────────────────
@@ -41,12 +41,12 @@ if "impact" not in st.session_state:
 # ── SIDEBAR ───────────────────────────────────────
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", [
-    "📂 Analyze Scripts",
-    "📄 Documentation",
-    "💼 Business Purpose",
-    "🔀 Flow Diagrams",
-    "💥 Impact Analysis",
-    "🤖 Ask AI"
+    "Analyze Scripts",
+    "Documentation",
+    "Business Purpose",
+    "Flow Diagrams",
+    "Impact Analysis",
+    "Ask AI"
 ])
 
 # ── HELPER ───────────────────────────────────────
@@ -64,8 +64,8 @@ SAMPLE_DIR = os.path.join(
 )
 
 # ── PAGE 1 ───────────────────────────────────────
-if page == "📂 Analyze Scripts":
-    st.header("📂 Analyze ETL Scripts")
+if page == "Analyze Scripts":
+    st.header("Analyze ETL Scripts")
 
     st.subheader("Use Sample Files")
     if st.button("▶ Analyze Sample ETL Files"):
@@ -78,9 +78,9 @@ if page == "📂 Analyze Scripts":
                     if result:
                         parsed.append(result)
             st.session_state.parsed_files = parsed
-            st.success(f"✅ Analyzed {len(parsed)} files!")
+            st.success(f"Analyzed {len(parsed)} files!")
             for p in parsed:
-                with st.expander(f"📄 {p['file']}"):
+                with st.expander(f"{p['file']}"):
                     st.write(f"**Type:** {p['type']}")
                     st.write(f"**Sources:** {', '.join(p['sources']) or 'N/A'}")
                     st.write(f"**Targets:** {', '.join(p['targets']) or 'N/A'}")
@@ -93,7 +93,7 @@ if page == "📂 Analyze Scripts":
         type=["py", "sql"],
         accept_multiple_files=True
     )
-    if uploaded and st.button("📤 Upload & Analyze"):
+    if uploaded and st.button("Upload & Analyze"):
         with st.spinner("Parsing uploaded files..."):
             parsed = []
             for f in uploaded:
@@ -109,7 +109,7 @@ if page == "📂 Analyze Scripts":
                     result["file"] = f.name
                     parsed.append(result)
             st.session_state.parsed_files = parsed
-            st.success(f"✅ Parsed {len(parsed)} files!")
+            st.success(f"Parsed {len(parsed)} files!")
             for p in parsed:
                 with st.expander(f"📄 {p['file']}"):
                     st.write(f"**Type:** {p['type']}")
@@ -118,12 +118,12 @@ if page == "📂 Analyze Scripts":
                     st.write(f"**Transformations:** {', '.join(p['transformations']) or 'N/A'}")
 
 # ── PAGE 2 ───────────────────────────────────────
-elif page == "📄 Documentation":
-    st.header("📄 Auto-Generated Documentation")
+elif page == "Documentation":
+    st.header("Auto-Generated Documentation")
     if not st.session_state.parsed_files:
-        st.warning("⚠️ Please analyze scripts first from the 'Analyze Scripts' page.")
+        st.warning("Please analyze scripts first from the 'Analyze Scripts' page.")
     else:
-        if st.button("⚡ Generate Documentation"):
+        if st.button("Generate Documentation"):
             with st.spinner("Generating docs with AI..."):
                 docs = {}
                 for p in st.session_state.parsed_files:
@@ -133,65 +133,65 @@ elif page == "📄 Documentation":
                 # Build RAG index immediately after generating docs
                 from ai.rag_pipeline import build_rag_index
                 build_rag_index(docs)
-                st.success(f"✅ Generated docs for {len(docs)} files!")
+                st.success(f"Generated docs for {len(docs)} files!")
         if st.session_state.docs:
             for fname, doc in st.session_state.docs.items():
-                with st.expander(f"📄 {fname}"):
+                with st.expander(f"{fname}"):
                     st.markdown(doc)
 
 # ── PAGE 3 ───────────────────────────────────────
-elif page == "💼 Business Purpose":
-    st.header("💼 Business Purpose Explainer")
+elif page == "Business Purpose":
+    st.header("Business Purpose Explainer")
     if not st.session_state.parsed_files:
-        st.warning("⚠️ Please analyze scripts first from the 'Analyze Scripts' page.")
+        st.warning("Please analyze scripts first from the 'Analyze Scripts' page.")
     else:
-        if st.button("💡 Explain Business Purpose"):
+        if st.button("Explain Business Purpose"):
             with st.spinner("Analyzing business context..."):
                 business = {}
                 for p in st.session_state.parsed_files:
                     explanation = explain_business_purpose(p)
                     business[p["file"]] = explanation
                 st.session_state.business = business
-                st.success(f"✅ Explained {len(business)} scripts!")
+                st.success(f"Explained {len(business)} scripts!")
         if st.session_state.business:
             for fname, explanation in st.session_state.business.items():
-                with st.expander(f"💼 {fname}"):
+                with st.expander(f"{fname}"):
                     st.markdown(explanation)
 
 # ── PAGE 4 ───────────────────────────────────────
-elif page == "🔀 Flow Diagrams":
-    st.header("🔀 Data Flow Diagrams")
+elif page == "Flow Diagrams":
+    st.header("Data Flow Diagrams")
     if not st.session_state.parsed_files:
-        st.warning("⚠️ Please analyze scripts first from the 'Analyze Scripts' page.")
+        st.warning("Please analyze scripts first from the 'Analyze Scripts' page.")
     else:
-        if st.button("🎨 Generate Flow Diagrams"):
+        if st.button("Generate Flow Diagrams"):
             with st.spinner("Generating diagrams..."):
                 diagrams = {}
                 for p in st.session_state.parsed_files:
                     path = generate_flow_diagram(p)
                     diagrams[p["file"]] = path
                 st.session_state.diagrams = diagrams
-                st.success(f"✅ Generated {len(diagrams)} diagrams!")
+                st.success(f"Generated {len(diagrams)} diagrams!")
         if st.session_state.diagrams:
             for fname, path in st.session_state.diagrams.items():
-                st.subheader(f"📊 {fname}")
+                st.subheader(f"{fname}")
                 if path and os.path.exists(path):
                     st.image(path)
                 else:
                     st.warning(f"Diagram not found for {fname}")
 
 # ── PAGE 5 ───────────────────────────────────────
-elif page == "💥 Impact Analysis":
-    st.header("💥 Impact Analysis")
+elif page == "Impact Analysis":
+    st.header("Impact Analysis")
     if not st.session_state.parsed_files:
-        st.warning("⚠️ Please analyze scripts first from the 'Analyze Scripts' page.")
+        st.warning("Please analyze scripts first from the 'Analyze Scripts' page.")
     else:
-        if st.button("🔍 Run Impact Analysis"):
+        if st.button("Run Impact Analysis"):
             with st.spinner("Analyzing dependencies..."):
                 results, G = analyze_all_scripts(st.session_state.parsed_files)
                 impact = results
                 st.session_state.impact = impact
-                st.success("✅ Impact analysis complete!")
+                st.success("Impact analysis complete!")
         if st.session_state.impact:
             for fname, report in st.session_state.impact.items():
                 risk = report.get("risk_level", "N/A")
@@ -208,33 +208,39 @@ elif page == "💥 Impact Analysis":
                     st.write(f"**Total nodes affected:** {report.get('total_nodes_affected')}")
 
 # ── PAGE 6 ───────────────────────────────────────
-elif page == "🤖 Ask AI":
-    st.header("🤖 Ask AI About Your ETL Scripts")
+elif page == "Ask AI":
+    st.header("Ask AI About Your ETL Scripts")
     st.info("Generate documentation first so the AI has context to work with.")
     question = st.text_input(
         "Ask a question:",
         placeholder="What does the HR script do?"
     )
-    if st.button("🔍 Ask") and question:
+    if st.button("Ask") and question:
         with st.spinner("Thinking..."):
             answer = query_rag(question)
             st.markdown(f"**Answer:** {answer}")
 
 # ── SIDEBAR DOWNLOAD ──────────────────────────────
 st.sidebar.divider()
-st.sidebar.subheader("📥 Export")
-if st.sidebar.button("⬇️ Download PDF Report"):
+st.sidebar.subheader("Export")
+if st.sidebar.button("Download PDF Report"):
     if not st.session_state.docs:
         st.sidebar.error("Generate documentation first!")
     else:
         with st.spinner("Generating PDF..."):
+            # Build parsed lookup dict
+            parsed_lookup = {
+                p["file"]: p 
+                for p in st.session_state.parsed_files
+            }
             pdf_bytes = export_to_pdf(
                 st.session_state.docs,
                 st.session_state.business,
-                st.session_state.impact
+                st.session_state.impact,
+                parsed_lookup
             )
             st.sidebar.download_button(
-                label="📄 Click to Save PDF",
+                label="Click to Save PDF",
                 data=pdf_bytes,
                 file_name="etl_report.pdf",
                 mime="application/pdf"

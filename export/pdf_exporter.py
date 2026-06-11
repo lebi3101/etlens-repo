@@ -65,15 +65,19 @@ class ETLReportPDF(FPDF):
         )
 
 
-def export_to_pdf(docs: dict, business: dict, impact: dict) -> bytes:
+def export_to_pdf(docs: dict, business: dict, impact: dict, parsed_lookup: dict = None) -> bytes:
     pdf = ETLReportPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     for fname in docs.keys():
-        parsed_stub = {
-            "file": fname,
-            "type": "python" if fname.endswith(".py") else "sql",
-            "sources": [], "targets": [], "transformations": []
-        }
+        # Use real parsed data if available
+        if parsed_lookup and fname in parsed_lookup:
+            parsed_stub = parsed_lookup[fname]
+        else:
+            parsed_stub = {
+                "file": fname,
+                "type": "python" if fname.endswith(".py") else "sql",
+                "sources": [], "targets": [], "transformations": []
+            }
         pdf.add_script_section(
             filename=fname,
             parsed=parsed_stub,
