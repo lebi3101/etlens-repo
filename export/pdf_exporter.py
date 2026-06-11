@@ -81,10 +81,20 @@ def export_to_pdf(docs: dict, business: dict, impact: dict) -> bytes:
             business_purpose=business.get(fname, "Not generated."),
             impact=impact.get(fname, {})
         )
-    result = pdf.output(dest="S")
-    if isinstance(result, bytes):
-        return result
-    return result.encode("latin-1")
+    # Handle both old and new fpdf2 versions
+    try:
+        # New fpdf2 versions return bytes directly
+        result = pdf.output()
+        if isinstance(result, bytes):
+            return result
+        # Old versions return string
+        return result.encode("latin-1")
+    except Exception:
+        # Final fallback
+        import io
+        buf = io.BytesIO()
+        pdf.output(buf)
+        return buf.getvalue()
 
 
 def generate_pdf_report(all_parsed, docs, business, impact_reports, output_filename="etl_report.pdf"):
