@@ -81,7 +81,10 @@ def export_to_pdf(docs: dict, business: dict, impact: dict) -> bytes:
             business_purpose=business.get(fname, "Not generated."),
             impact=impact.get(fname, {})
         )
-    return pdf.output(dest="S").encode("latin-1")
+    result = pdf.output(dest="S")
+    if isinstance(result, bytes):
+        return result
+    return result.encode("latin-1")
 
 
 def generate_pdf_report(all_parsed, docs, business, impact_reports, output_filename="etl_report.pdf"):
